@@ -2,6 +2,8 @@ import streamlit as st
 from PIL import Image, ImageFilter
 import numpy as np
 import io
+import os
+port = int(os.environ.get("PORT", 8501))
 
 # =========================
 # CONFIG
