@@ -9,6 +9,91 @@ import io
 st.set_page_config(page_title="AI Dashboard", layout="wide")
 
 # =========================
+# 💜 GLOBAL CSS (FINAL CLEAN UI)
+# =========================
+st.markdown("""
+<style>
+
+/* ❌ REMOVE STREAMLIT UI */
+#MainMenu {visibility: hidden;}
+header {visibility: hidden;}
+footer {visibility: hidden;}
+footer:after {content: ""; display: none;}
+
+/* 🌈 BACKGROUND */
+html, body, [data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #f5f3ff, #ede9fe) !important;
+}
+
+/* CENTER LOGIN */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+/* GLASS CARD */
+.login-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 10px 30px rgba(139,92,246,0.2);
+    text-align: center;
+}
+
+/* TITLE */
+.login-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #5b21b6;
+    margin-bottom: 20px;
+}
+
+/* INPUT */
+.stTextInput > div > div > input {
+    border-radius: 10px;
+    border: 1px solid #ddd6fe;
+}
+
+/* BUTTON */
+.stButton > button {
+    width: 100%;
+    background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* DASHBOARD TITLE */
+.main-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #5b21b6;
+}
+
+/* IMAGE STYLE */
+.stImage {
+    border-radius: 12px;
+    border: 1px solid #ddd6fe;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 20px;
+        border-radius: 15px;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
 # SESSION STATE
 # =========================
 if "logged_in" not in st.session_state:
@@ -18,18 +103,20 @@ if "user" not in st.session_state:
     st.session_state.user = ""
 
 # =========================
-# SIMPLE USER STORAGE (DEMO)
+# DEMO USERS
 # =========================
 USERS = {
-    "admin": "1234",
-    "user": "1234"
+    "admin": "1234"
 }
 
 # =========================
-# 💜 LOGIN PAGE
+# 🔐 LOGIN PAGE
 # =========================
 def login_page():
-    st.markdown("## 🔐 Login")
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+    st.markdown('<div class="login-card">', unsafe_allow_html=True)
+
+    st.markdown('<div class="login-title">🔐 Welcome Back</div>', unsafe_allow_html=True)
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -38,16 +125,20 @@ def login_page():
         if username in USERS and USERS[username] == password:
             st.session_state.logged_in = True
             st.session_state.user = username
-            st.success("Login successful")
             st.rerun()
         else:
             st.error("Invalid credentials")
 
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # =========================
-# 💜 DASHBOARD
+# 🧑‍💻 DASHBOARD
 # =========================
 def dashboard():
-    st.markdown(f"## 👋 Welcome, {st.session_state.user}")
+    st.markdown('<div class="main-title">✨ AI Image Dashboard</div>', unsafe_allow_html=True)
+
+    st.markdown(f"👋 Welcome, **{st.session_state.user}**")
 
     if st.button("Logout"):
         st.session_state.logged_in = False
@@ -55,10 +146,7 @@ def dashboard():
 
     st.markdown("---")
 
-    # Upload
     uploaded_file = st.file_uploader("📤 Upload Image", type=["png", "jpg", "jpeg"])
-
-    # Tool selection
     tool = st.selectbox("Select Tool", ["Background Change", "Enhance Image"])
 
     if uploaded_file:
@@ -107,7 +195,7 @@ def dashboard():
         st.info("Upload an image to start")
 
 # =========================
-# MAIN ROUTER
+# ROUTER
 # =========================
 if not st.session_state.logged_in:
     login_page()
